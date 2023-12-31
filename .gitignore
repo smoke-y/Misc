@@ -1,0 +1,8 @@
+bin/
+misc/
+**/.vs/
+**/*.sln
+**/*.exe
+**/*.ll
+**/*.obj
+**/*.pdb
