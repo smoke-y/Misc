@@ -7,7 +7,7 @@
 #endif
 
 #define CHUNK_SIZE  (sizeof(u64)*2)
-#define CHUNK_COUNT 10000
+#define CHUNK_COUNT 10000000
 
 namespace allocator{
     void *alloc(u64 size, char *memory, bool *stat){
@@ -63,8 +63,12 @@ namespace allocator{
 namespace mem{
     char *memory;
     bool *stat;
+#if(DBG)
+    u32 allocCount;
+#endif
     
     void init(){
+	allocCount = 0;
 	memory = (char*)malloc(CHUNK_SIZE   * CHUNK_COUNT);
 	const u64 statSize = sizeof(bool) * (CHUNK_COUNT + 1);   //NOTE: +1 for padding
 	stat   = (bool*)malloc(statSize);
@@ -78,10 +82,24 @@ namespace mem{
 	::free(memory);
 	::free(stat);
     };
-    void* alloc(u64 size){
+    void *alloc(u64 size){
+#if(DBG)
+	allocCount += 1;
+#endif
 	return allocator::alloc(size, memory, stat);
     };
+    void *calloc(u64 size){
+	void *ptr = alloc(size);
+	memset(ptr, 0, size);
+	return ptr;
+    };
     void free(void *ptr){
+#if(DBG)
+	if(allocCount == 0){
+	    printf("[MEM]: allocCount is 0. Trying to free another pointer\n");
+	};
+	allocCount -= 1;
+#endif
 	return allocator::free(ptr, memory, stat);
     };
 };
