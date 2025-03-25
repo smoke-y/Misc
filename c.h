@@ -1,7 +1,6 @@
 //Define C_LOG(fmt, ...) in source code
-#define DBG 1
 
-#if(DBG)
+#ifdef DBG
 #define DASS(x)	if(!x) C_LOG("\n%s(%d): asserion failed -> %s\n", __FILE_NAME__, __LINE__, #x)
 #define HIT     C_LOG("\n%s(%d): HIT!\n", __FILE_NAME__, __LINE__);
 #else
@@ -42,7 +41,3 @@ typedef u8                      b8;
 typedef u16                     b16;
 typedef u32                     b32;
 typedef u64                     b64;
-
-//array with length
-#define Arr(T, length)       struct{T mem[length]; u32 len=length;}
-#define Arrt(T, length, LT)  struct{T mem[length]; LT  len=length;}
